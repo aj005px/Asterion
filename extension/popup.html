@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asterion - Tab Prioritization</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <header class="asterion-header">
+        <div class="brand">
+            <img src="icons/icon32.svg" alt="Asterion logo" class="brand-logo">
+            <div class="brand-text">
+                <h1 class="brand-title">ASTERION</h1>
+                <div class="brand-subtitle">TAB PRIORITIZATION CONSOLE</div>
+            </div>
+        </div>
+        <div class="status-bar">
+            <span class="status-indicator" id="statusIndicator">●</span>
+            <span id="connectionStatus" class="status-text">CHECKING...</span>
+        </div>
+    </header>
+
+    <section class="current-tab-section">
+        <div class="section-header">
+            <span class="section-title">CURRENT FOCUS</span>
+        </div>
+        <div class="current-tab-card">
+            <div class="label">URL</div>
+            <div class="value" id="url">Loading...</div>
+            <div class="label">DOMAIN</div>
+            <div class="value domain-value" id="domain">Loading...</div>
+        </div>
+    </section>
+
+    <section class="recommendations-section">
+        <div class="section-header">
+            <span class="section-title">ENGAGEMENT RANKING</span>
+            <button id="refresh" class="refresh-btn" aria-label="Refresh ranking">[ REFRESH ]</button>
+        </div>
+        <p class="section-description">
+            Ranked by time, activation count and recency. Higher scores indicate stronger recorded engagement.
+            Not a confidence percentage. Useful/Not useful feedback helps improve results when enough data exists.
+        </p>
+        <div id="message" class="message" aria-live="polite">Loading recommendations...</div>
+        <div id="recommendations" class="recommendations-list"></div>
+    </section>
+
+    <footer class="asterion-footer">
+        <div class="footer-line">LOCAL-FIRST • NO AUTO-CLOSE • RETRO CONSOLE v1.0</div>
+    </footer>
+
+    <script src="popup.js"></script>
+</body>
+</html>

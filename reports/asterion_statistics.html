@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asterion Statistics Report</title>
+    <style>
+        :root {
+            --bg: #0a0a1a; --bg2: #12123a; --cyan: #00ffff; --mag: #ff00ff; --green: #00ff88; --text: #e0e0ff; --dim: #a0a0c0;
+        }
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(180deg, var(--bg) 0%, #0f0f2e 100%);
+            color: var(--text);
+            margin: 0; padding: 20px;
+            line-height: 1.6;
+        }
+        header {
+            border: 2px solid var(--cyan);
+            padding: 20px;
+            background: linear-gradient(90deg, var(--bg2) 0%, #1a1a4a 100%);
+            box-shadow: 0 0 10px rgba(0,255,255,0.3);
+            margin-bottom: 30px;
+        }
+        h1 { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); margin: 0; letter-spacing: 4px; }
+        h2 { color: var(--mag); border-bottom: 1px solid var(--mag); padding-bottom: 5px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .card {
+            background: var(--bg2); border: 1px solid var(--cyan);
+            padding: 15px; box-shadow: inset 0 0 8px rgba(0,255,255,0.1);
+        }
+        .metric { font-size: 2em; color: var(--green); font-weight: bold; text-shadow: 0 0 6px var(--green); }
+        .label { color: var(--dim); font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--bg2); color: var(--cyan); padding: 10px; text-align: left; border: 1px solid var(--cyan); }
+        td { padding: 8px; border: 1px solid #333; }
+        .warning { color: #ffaa00; background: rgba(255,170,0,0.1); padding: 10px; border: 1px solid #ffaa00; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ASTERION STATISTICS CONSOLE</h1>
+        <p>RETRO-FUTURISTIC ANALYTICS • LOCAL REPORT • NO REMOTE DEPENDENCIES</p>
+        <p>GENERATED: 2026-10-24T22:08:00.555154</p>
+    </header>
+    
+    <h2>DATA COUNTS</h2>
+    <div class="grid">
+        <div class="card"><div class="metric">83</div><div class="label">TOTAL TAB EVENTS</div></div>
+        <div class="card"><div class="metric">7</div><div class="label">FEEDBACK RECORDS</div></div>
+        <div class="card"><div class="metric">3</div><div class="label">ELIGIBLE TRAINING ROWS</div></div>
+        <div class="card"><div class="metric">1</div><div class="label">TEST RECORDS (EXCLUDED)</div></div>
+        <div class="card"><div class="metric">3</div><div class="label">INCOMPLETE/INVALID</div></div>
+    </div>
+    
+    <h2>DATA QUALITY</h2>
+    <table>
+        <tr><th>CHECK</th><th>STATUS</th><th>NOTES</th></tr>
+        <tr><td>Schema validation</td><td>APPLIED</td><td>Records validated on export</td></tr>
+        <tr><td>Test data exclusion</td><td>APPLIED</td><td>is_test flagged and test.example domain excluded</td></tr>
+        <tr><td>Historical integrity</td><td>PRESERVED</td><td>No synthetic labels created; incomplete records excluded from training</td></tr>
+    </table>
+    
+    <h2>MODEL EVALUATION</h2>
+    <div class='warning'>INSUFFICIENT GENUINE DATA FOR TRAINING - Baseline only active. Need 20+ eligible v2 feedback with both labels.</div>
+    
+    <footer style="margin-top: 40px; text-align: center; color: var(--dim); border-top: 1px solid var(--cyan); padding-top: 20px;">
+        <p>ASTERION LOCAL-FIRST ML TAB PRIORITIZATION • AGGREGATED METRICS ONLY</p>
+    </footer>
+</body>
+</html>

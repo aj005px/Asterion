@@ -1,0 +1,89 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+dump/
+
+# MongoDB data
+mongod.log
+/data/
+
+# Credentials and secrets
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Local user data
+*.csv
+!intelligence/feedback_dataset.csv
+!**/example*.csv
+
+# Model artifacts
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+*.onnx
+models/
+checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary
+/tmp/
+*.tmp
+
+# Reports with sensitive data (if they contain private info)
+# reports/ contains deliverables - tracked
+
+# Local preview files
+*.preview.html
