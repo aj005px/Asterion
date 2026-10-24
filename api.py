@@ -12,6 +12,8 @@ from storage.database import (
 )
 from intelligence.compare_scores import compare_scores
 from intelligence.features import get_domain_features
+from intelligence.hybrid_ranking import compute_hybrid_scores
+from intelligence.inference import inference
 
 SCORING_VERSION = "v2"
 
@@ -74,7 +76,16 @@ def startup():
 
 @app.get("/")
 def root():
-    return {"status": "ok", "service": "asterion-api", "scoring_version": SCORING_VERSION}
+    return {"status": "ok", "service": "asterion-api", "scoring_version": SCORING_VERSION, "model_status": inference.status()}
+
+
+@app.get("/model/status")
+def model_status():
+    try:
+        return inference.status()
+    except Exception as error:
+        raise HTTPException(status_code=500, detail="Failed to get model status")
+
 
 
 @app.post("/tab/activate")
@@ -125,10 +136,38 @@ def record_duration(event: TabDuration):
 @app.get("/recommendations")
 def get_recommendations():
     try:
+        # Use hybrid ML ranking (baseline + trained model) with safe fallback
+        try:
+            results = compute_hybrid_scores()
+            if results:
+                # compute_hybrid_scores already sorts by hybrid_score desc
+                enriched = []
+                for item in results:
+                    enriched.append({
+                        **item,
+                        "scoring_version": SCORING_VERSION,
+                    })
+                # Determine overall ranking method
+                if any(r.get("ml_used") for r in enriched):
+                    ranking_method = "hybrid_ml_baseline"
+                else:
+                    ranking_method = "weighted_baseline"
+                return {
+                    "ranking_method": ranking_method,
+                    "scoring_version": SCORING_VERSION,
+                    "count": len(enriched),
+                    "recommendations": enriched,
+                    "model_status": inference.status(),
+                }
+        except Exception:
+            # Fall through to baseline
+            pass
+
+        # Baseline fallback (preserved behavior)
         results = compare_scores()
 
         results.sort(
-            key=lambda item: item.get("weighted_score", 0),
+            key=lambda item: item.get("hybrid_score", item.get("weighted_score", 0)),
             reverse=True,
         )
 
@@ -138,6 +177,7 @@ def get_recommendations():
                 **item,
                 "scoring_version": SCORING_VERSION,
                 "ranking_method": "weighted_baseline",
+                "ml_used": False,
             })
 
         return {
@@ -145,6 +185,7 @@ def get_recommendations():
             "scoring_version": SCORING_VERSION,
             "count": len(enriched),
             "recommendations": enriched,
+            "model_status": inference.status(),
         }
     except Exception as error:
         raise HTTPException(

@@ -6,11 +6,13 @@ Asterion is a local-first, ML-powered Chrome extension that ranks browser tabs b
 ## Features
 
 - Tracks activity on HTTP and HTTPS tabs.
-- Ranks domains using time spent, activations, and recency.
-- Collects useful/not useful feedback.
+- Ranks domains using time spent, activations, and recency (weighted baseline preserved).
+- **Hybrid ML ranking**: Trained Logistic Regression model (with StandardScaler) uses baseline scores + activity features and learns from genuine Useful/Not useful feedback; predicted probability of usefulness blends with the baseline score for live recommendations.
+- Collects useful/not useful feedback (historical supervision only; feedback is never used as inference-time input).
 - Alerts users when the number of open tabs reaches a configured threshold.
-- Recommends tabs to review, with user-controlled closing.
+- Recommends tabs to review, with user-controlled closing (never auto-closes).
 - Uses a local FastAPI backend and MongoDB to store tab events.
+- Safe fallback to baseline-only ranking if no valid/trained model or insufficient trustworthy data.
 
 ## Tech Stack
 
@@ -65,10 +67,10 @@ API documentation: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ## Results and Evaluation
 
-- **Automated tests:** 9 passed in the latest reported run.
+- **Automated tests:** 16 passed in the latest run (core + tab warning tests).
 - **Tab-count alert:** Manually tested and reported to work.
-- **Ranking:** Uses activity signals such as time spent, activations, and recency.
-- **Machine learning:** Baseline ranking remains active when there is insufficient feedback for reliable model training.
+- **Ranking:** Hybrid ML + baseline. Baseline formula preserved (time 40%, activation 35%, recency 25%). When a valid trained model exists with sufficient trustworthy data, ML predicted probability of usefulness influences ranking via blending; otherwise baseline-only ranking is used.
+- **Machine learning:** Genuine user feedback trains the Logistic Regression + StandardScaler model (chronological split, validation, no leakage). Feedback is not used at inference time. If insufficient data/invalid/missing model, baseline fallback is automatic and safe.
 
 Detailed reports:
 
