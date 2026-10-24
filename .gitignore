@@ -30,6 +30,7 @@ env/
 # Environment files
 .env
 .env.local
+!.env.example
 .env.*.local
 
 # Database files
@@ -51,7 +52,6 @@ secrets.json
 
 # Local user data
 *.csv
-!intelligence/feedback_dataset.csv
 !**/example*.csv
 
 # Model artifacts

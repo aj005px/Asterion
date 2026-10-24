@@ -1,5 +1,0 @@
-domain,time_score,activation_score,recency_score,weighted_score,label,scoring_version,is_test,timestamp
-127.0.0.1,0.983,0.783,0.943,0.903,not_useful,legacy,False,2026-10-24T15:16:35.205000
-127.0.0.1,0.983,0.783,0.298,0.742,useful,legacy,False,2026-10-24T15:51:14.614000
-docs.python.org,0.0,0.0,0.0,0.0,useful,legacy,False,2026-10-24T15:51:17.042000
-test.example,0.6,0.4,0.5,0.5,useful,v2,True,2026-10-24T16:05:36.327000
