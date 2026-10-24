@@ -1,6 +1,6 @@
 # Asterion ML Evaluation Report
 
-Generated: 2026-10-24T22:08:00.555154
+Generated: 2026-10-24T23:04:29.758016
 
 ## Data Pipeline
 - Chrome extension tracks tab activation and duration
@@ -26,7 +26,7 @@ weighted_score = 0.40*time_score + 0.35*activation_score + 0.25*recency_score
 - Model: Logistic Regression with StandardScaler (explainable)
 - Features: time_score, activation_score, recency_score, weighted_score
 - Split: Chronological (70/30) to prevent leakage
-- Genuine eligible samples: 3
+- Genuine eligible samples: 6
 
 ## Evaluation Results
 Model not trained - insufficient genuine data.

@@ -1,106 +1,92 @@
 # Asterion
 
-Asterion is a local-first ML-powered browser-tab prioritization assistant. It tracks tab usage, extracts useful features, ranks tabs or domains by relevance, and uses explicit useful/not-useful feedback to improve recommendations when enough valid data exists.
-
-## Overview
-- Chrome Manifest V3 extension for tab tracking
-- Python FastAPI backend
-- MongoDB local storage
-- Feature extraction and weighted baseline ranking
-- Feedback collection with validation
-- Optional ML training (Logistic Regression) when sufficient genuine data exists
-- Retro-internet styled UI
+Asterion is a local-first tool to rank browser tabs by use. It tracks tab use, ranks domains, and uses feedback to improve results.
 
 ## Features
-- Automatic tab activation and duration tracking (localhost API only)
-- Domain-level engagement ranking
-- Explicit feedback (Useful/Not Useful) tied to recommendations
-- Data validation and test-data exclusion
-- Baseline fallback if model not available/insufficient data
-- Self-contained local reports
+- Chrome extension tracks HTTP tab use.
+- FastAPI backend runs locally.
+- MongoDB stores data locally.
+- Baseline ranks domains by time, activations, and recency.
+- Mark results as useful or not useful.
+- Get an alert if you have many open tabs.
+- Tabs to Review: suggests which open tabs you may want to close based on real activity data. You must close tabs explicitly. No automatic closing.
 
-## Architecture
-```mermaid
-graph TD
-    A[Chrome Extension] -->|POST /tab/activate| B[FastAPI]
-    A -->|POST /tab/duration| B
-    A -->|GET /recommendations| B
-    A -->|POST /feedback| B
-    B --> C[MongoDB]
-    C --> D[Feature Extraction]
-    D --> E[Baseline Ranking]
-    E --> F[Recommendations]
-    G[Export/Train] --> H[ML Model]
-    H -->|if validated| E
-```
-
-## Quick Start
-
-### Requirements
-- Linux (tested)
-- Python 3.12+
-- MongoDB running locally on port 27017
-- Google Chrome/Chromium
-
-### Setup
-
-1. Create virtual environment and install dependencies:
+## Quick start
+1. Make a virtual environment:
 ```bash
 cd ~/Desktop/projects/Asterion
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
-
-2. Configure environment:
+2. Set environment:
 ```bash
 cp .env.example .env
-# Edit .env for local settings (defaults work for local MongoDB)
 ```
-
-3. Start MongoDB (if not running):
+3. Start MongoDB on port 27017.
+4. Start the API:
 ```bash
-mongod --dbpath ~/data/db 2>&1 &
-```
-
-4. Start API:
-```bash
-cd ~/Desktop/projects/Asterion
-source .venv/bin/activate
 uvicorn api:app --host 127.0.0.1 --port 8000 --reload
 ```
-
-5. Load Chrome extension:
+5. Load the extension in Chrome:
 - Open `chrome://extensions/`
-- Enable Developer mode
+- Turn on Developer mode
 - Click "Load unpacked"
 - Select `~/Desktop/projects/Asterion/extension/`
 
-## Usage
-- Browse normally - extension tracks HTTP tabs
-- Click extension icon to see rankings and give feedback
-- Feedback improves dataset for training when enough genuine examples collected
+## Use
+- Browse normally. The extension tracks HTTP tabs.
+- Click the Asterion icon to see rankings.
+- Give useful or not useful feedback.
+- Use "Tabs to Review" to see suggestions based on real activity data. Review reasons and evidence, then click "Close tab" only if you want to close it. Click "Keep" to dismiss. Active tab, pinned tabs, internal/browser pages, and tabs playing audio are excluded by default.
+- If you open 20 or more relevant tabs, Asterion shows a notification and a badge.
 
-## Data & ML
-- Baseline formula: `0.40*log1p(time)/max_logtime + 0.35*log1p(activations)/max_logact + 0.25*exp(-recency/1800)`
-- Training requires genuine v2 feedback (>=20, both labels). Test data excluded.
-- If insufficient data, baseline remains active.
+## Tab alert
+- Count: open relevant tabs (http/https). Internal pages like chrome:// are not counted.
+- Threshold: 20 tabs (default).
+- Alert: Chrome notification. A red badge shows the count.
+- Cooldown: 10 minutes. No repeat alert while above threshold in cooldown.
+- Reset: if count falls below threshold, you can get an alert again when it crosses up.
+
+## Tabs to Review
+- Uses real activity data from stored tab events (time, activations, recency) and existing ranking scores.
+- Exclusions: active tab, pinned tabs, tabs playing audio (when detectable), discarded tabs, and internal/browser pages (chrome://, chrome-extension://, edge://, about:, devtools://, etc.).
+- Recommendations are ranked by inverse of the baseline ranking score when available. If data is missing, the UI states there is not enough activity data and gives limited reasons.
+- Closing requires explicit user action (click "Close tab"). No automatic closing. The exact tab ID is used for closing.
+- If the API is offline or returns no data, the feature degrades gracefully.
+
+## Data and ML
+- Baseline formula uses time, activations, and recency.
+- Training needs enough valid feedback.
+- If data is not enough, baseline stays active.
+- Feedback from the existing feedback pipeline is reused where possible. No synthetic training samples are created.
 
 ## Reports
-- HTML: `reports/asterion_statistics.html` (open locally)
+- HTML: `reports/asterion_statistics.html`
 - Markdown: `reports/ASTERION_ML_EVALUATION.md`
 
-## Testing
+## Test
 ```bash
-pytest tests/test_core.py -v
+pytest -q
 ```
 
-## Privacy & Security
-- Local-first only
-- No secrets in extension
-- .env excluded from git
-- No private browsing data logged
-- Feedback validated before use
+## Privacy
+- Runs locally by default.
+- The API listens on 127.0.0.1 and is not intended for direct public access.
+- No data is intentionally sent to remote sites by the local application.
+- Keep secrets in local files. Do not commit `.env` or other secrets.
 
-## License
-Local project - use as appropriate.
+## Limitations
+- The FastAPI backend must be started manually before you use features that depend on it (no automatic startup at login is currently implemented).
+- MongoDB must be running for features that depend on stored data.
+- Automatic backend startup at login is not currently configured.
+- The ML model needs enough valid feedback before it can be trained and evaluated reliably. Until then, the baseline ranking remains active.
+- Tabs to Review uses only available activity data. If no data exists for a domain, it states there is not enough activity data.
+- Other users cannot use your local backend through `127.0.0.1:8000`. They must set up the extension, backend, and MongoDB on their own computers, or the project must be adapted for a suitable shared service.
+- The project is currently intended as a local development and portfolio project. It is not yet a one-click public service or a fully packaged release.
+
+## Future improvements
+- Start the backend automatically at login.
+- Simplify installation for other users.
+- Collect more valid feedback and evaluate the trained ML model.
+- Prepare the extension for wider distribution after testing and security review.

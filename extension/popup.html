@@ -3,51 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asterion - Tab Prioritization</title>
+    <title>Asterion</title>
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
     <header class="asterion-header">
-        <div class="brand">
-            <img src="icons/icon32.svg" alt="Asterion logo" class="brand-logo">
-            <div class="brand-text">
-                <h1 class="brand-title">ASTERION</h1>
-                <div class="brand-subtitle">TAB PRIORITIZATION CONSOLE</div>
+        <div class="title-bar">
+            <div class="title-bar-text">
+                <img src="icons/icon16.png" alt="Asterion" class="title-icon">
+                <span>Asterion</span>
             </div>
         </div>
-        <div class="status-bar">
-            <span class="status-indicator" id="statusIndicator">●</span>
-            <span id="connectionStatus" class="status-text">CHECKING...</span>
+        <div class="brand-row">
+            <img src="icons/icon32.png" alt="Asterion globe" class="brand-logo">
+            <div class="brand-text">
+                <div class="brand-title">Asterion</div>
+                <div class="brand-subtitle">Tab Prioritization</div>
+            </div>
+        </div>
+        <div class="status-line">
+            <span id="statusIndicator" class="status-dot">●</span>
+            <span id="connectionStatus" class="status-text">Checking...</span>
         </div>
     </header>
 
-    <section class="current-tab-section">
-        <div class="section-header">
-            <span class="section-title">CURRENT FOCUS</span>
-        </div>
-        <div class="current-tab-card">
-            <div class="label">URL</div>
-            <div class="value" id="url">Loading...</div>
-            <div class="label">DOMAIN</div>
-            <div class="value domain-value" id="domain">Loading...</div>
+    <section class="panel">
+        <div class="panel-title">Current page</div>
+        <div class="panel-body">
+            <div class="field-label">URL</div>
+            <div class="field-value" id="url">Loading...</div>
+            <div class="field-label">Domain</div>
+            <div class="field-value" id="domain">Loading...</div>
         </div>
     </section>
 
-    <section class="recommendations-section">
-        <div class="section-header">
-            <span class="section-title">ENGAGEMENT RANKING</span>
-            <button id="refresh" class="refresh-btn" aria-label="Refresh ranking">[ REFRESH ]</button>
+    <section class="panel">
+        <div class="panel-title-bar">
+            <span class="panel-title">Engagement ranking</span>
+            <button id="refresh" class="btn" type="button">Refresh</button>
         </div>
-        <p class="section-description">
-            Ranked by time, activation count and recency. Higher scores indicate stronger recorded engagement.
-            Not a confidence percentage. Useful/Not useful feedback helps improve results when enough data exists.
-        </p>
-        <div id="message" class="message" aria-live="polite">Loading recommendations...</div>
-        <div id="recommendations" class="recommendations-list"></div>
+        <div class="panel-body">
+            <p class="help-text">Ranked by time, activation count and recency. Higher scores show more recorded use.</p>
+            <div id="message" class="message" aria-live="polite">Loading recommendations...</div>
+            <div id="recommendations" class="recommendations-list"></div>
+        </div>
     </section>
 
-    <footer class="asterion-footer">
-        <div class="footer-line">LOCAL-FIRST • NO AUTO-CLOSE • RETRO CONSOLE v1.0</div>
+    <section class="panel">
+        <div class="panel-title-bar">
+            <span class="panel-title">Tabs to Review</span>
+            <button id="refreshReview" class="btn" type="button">Review tabs</button>
+        </div>
+        <div class="panel-body">
+            <p class="help-text">Suggests tabs to close based on real activity data. Excludes active, pinned, internal pages, and tabs playing audio. Closing only happens on explicit action.</p>
+            <div id="reviewMessage" class="message" aria-live="polite">Click "Review tabs" to scan open tabs.</div>
+            <div id="tabsToReview" class="recommendations-list"></div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-text">Local-first</div>
     </footer>
 
     <script src="popup.js"></script>
